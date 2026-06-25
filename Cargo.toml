@@ -1,0 +1,46 @@
+[package]
+name = "touchhle-arm-interpreter"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.74"
+license = "MPL-2.0"
+description = "Pure-Rust ARMv7-A (32-bit; ARM + Thumb-2 + VFP) interpreter CPU core, extracted from touchHLE. No JIT — runs where executable memory is forbidden (modern iOS)."
+keywords = ["arm", "armv7", "interpreter", "emulator", "cpu"]
+categories = ["emulators", "no-std::no-alloc"]
+readme = "README.md"
+# Upstream this was extracted from:
+# https://github.com/touchHLE/touchHLE  (MPL-2.0). See README "Provenance".
+
+[dependencies]
+# Library logging facade. `echo!` (the interpreter's diagnostic output, e.g. the
+# `[INTERP-UNIMPL]` work-queue line) routes here. A binary using this crate picks
+# a logger (env_logger, etc.); with none, output is silently dropped.
+log = "0.4"
+# 4 GiB lazily-committed guest address space via mmap (see src/mem.rs).
+libc = "0.2"
+
+[dev-dependencies]
+env_logger = "0.11"
+
+[features]
+default = []
+# Per-instruction debug instrumentation: recent-instruction trace ring + a
+# lightweight "heartbeat" that prints pc/lr/sp periodically (to catch hangs by
+# seeing the PC cluster into a loop body). Slow — opt in only when debugging.
+interp_debug = []
+interp_hb = []
+# Game-specific hardcoded fast-paths / hang guards for MoleWorld (摩尔庄园) 5.5.0.
+# OFF by default (a general ARMv7 interpreter must not special-case PC addresses).
+# Only meaningful when running that exact game binary; see README "MoleWorld notes".
+moleworld_compat = []
+
+# The interpreter source carries `#[cfg(feature = "cpu_dynarmic" / "cpu_interpreter")]`
+# blocks for touchHLE's differential test harness (against the dynarmic JIT). Those
+# features don't exist here, so the blocks compile out; silence the lint about them.
+[lints.rust]
+unexpected_cfgs = { level = "allow" }
+
+[profile.release]
+# The interpreter is a hot decode-and-execute loop; favour optimisation.
+opt-level = 3
+lto = "thin"
