@@ -1,5 +1,11 @@
 # touchhle-arm-interpreter
 
+[![Rust](https://img.shields.io/badge/Rust-000000?style=flat-square&logo=rust&logoColor=white)](https://www.rust-lang.org)
+[![JIT](https://img.shields.io/badge/JIT-none-critical?style=flat-square)](#)
+[![Arch](https://img.shields.io/badge/ISA-ARMv7--A_·_Thumb--2_·_VFP-4c8bf5?style=flat-square)](#)
+[![License](https://img.shields.io/badge/license-MPL--2.0-blue?style=flat-square)](LICENSE)
+[![from touchHLE](https://img.shields.io/badge/extracted_from-touchHLE-8a2be2?style=flat-square)](https://github.com/touchHLE/touchHLE)
+
 **English** | [中文](#中文)
 
 A **pure-Rust ARMv7-A (32-bit) CPU interpreter** — ARM (A32), Thumb / Thumb-2
